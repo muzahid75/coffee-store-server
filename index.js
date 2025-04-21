@@ -28,8 +28,6 @@ async function run() {
     const database = client.db("coffeeDB");
     const coffeeCollection = database.collection("newCoffee");
 
-    const userCollection = client.db("coffeeDB").collection("users");
-
     app.get("/coffee", async (req, res) => {
       const cursor = coffeeCollection.find();
       const result = await cursor.toArray();
@@ -76,23 +74,6 @@ async function run() {
       res.send(result);
     });
 
-    // users info 
-
-    app.get("/users", async (req, res) => {
-      const cursor = userCollection.find();
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    
-    app.post("/users", async (req, res) => {
-      const newUser = req.body;
-      console.log(newUser);
-      const result = await userCollection.insertOne(newUser);
-      res.send(result);
-    });
-
-    
-
     app.delete("/coffee/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -101,10 +82,10 @@ async function run() {
       res.send(result);
     });
     // Send a ping to confirm a successful connection
-    // await client.db("admin").command({ ping: 1 });
-    // console.log(
-    //   "Pinged your deployment. You successfully connected to MongoDB!"
-    // );
+    await client.db("admin").command({ ping: 1 });
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
@@ -116,7 +97,6 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-// app.listen(port, () => {
-//   console.log(`Example app listening on port ${port}`);
-// });
-module.exports = app;
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
+});
